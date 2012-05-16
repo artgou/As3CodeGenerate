@@ -1,0 +1,8 @@
+package *INTERFACEPACKAGE*
+{
+*IMPORTS*
+	public interface *INTERFACE*
+	{
+*FUNCTIONS*
+	}
+}

@@ -1,0 +1,12 @@
+package *VOPACKAGE*
+{
+*IMPORTS*
+	public class *VO*
+	{
+*PROPERTIES*
+		public function *VO*()
+		{
+		}
+*GETTERSETTERS*
+	}
+}
