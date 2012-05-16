@@ -2,6 +2,8 @@ package
 {
 	import com.far.analysis.GeneratedFile;
 	import com.far.analysis.PseudoClass;
+	import com.far.analysis.PseudoClassMethod;
+	import com.far.analysis.PseudoFunctionVariable;
 	import com.far.analysis.PseudoVariable;
 	import com.far.analysis.TemplateManager;
 	import com.far.generator.ClassGenerator;
@@ -13,6 +15,7 @@ package
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.html.HTMLLoader;
+	import flash.utils.Dictionary;
 
 	public class As3CodeGenerate extends Sprite
 	{
@@ -30,25 +33,24 @@ package
 			
 			TemplateManager.getInstance().call= call;
 			TemplateManager.getInstance().getTemplates("FCGTemplates_v097000/");
-			
-	
 		}
 		private  function call():void{
 			var pseudo:PseudoClass = new PseudoClass();
 			pseudo.className="Main";
 			pseudo.packageName="com";
-			pseudo.properties= Vector.<PseudoVariable>([new PseudoVariable("id","int",true)]);
+			pseudo.properties= Vector.<PseudoVariable>([new PseudoVariable("id","com.far.x",true),new PseudoVariable("name","com.far.y",true)]);
+			pseudo.methods=Vector.<PseudoClassMethod>([new PseudoClassMethod("sayHi",Vector.<PseudoFunctionVariable>([new PseudoFunctionVariable("id","String","1"),new PseudoFunctionVariable("isA","Boolean","true")]),"Object")]);
 			var gen:ClassGenerator = new ClassGenerator();
 			var gfile:GeneratedFile = gen.generator(pseudo);
 			trace(gfile.code);
 			
-			var eveGen:EventGenerator = new EventGenerator();
-			gfile = eveGen.generator("MyEvent");
-			trace(gfile.code);
-			
-			var sig:SingletonGenerator = new SingletonGenerator();
-			gfile = sig.generator("MySig");
-			trace(gfile.code);
+//			var eveGen:EventGenerator = new EventGenerator();
+//			gfile = eveGen.generator("MyEvent");
+//			trace(gfile.code);
+//			
+//			var sig:SingletonGenerator = new SingletonGenerator();
+//			gfile = sig.generator("MySig");
+//			trace(gfile.code);
 		}
 		
 		
