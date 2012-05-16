@@ -4,6 +4,8 @@ package com.far.generator
 	import com.far.analysis.PseudoClass;
 	import com.far.analysis.PseudoClassMethod;
 	import com.far.analysis.PseudoFunctionVariable;
+	
+	import flash.utils.Dictionary;
 
 	public class InterfaceGenerator extends GeneratorConfig
 	{
@@ -13,13 +15,23 @@ package com.far.generator
 
 		public function generator(pOriginalFile:PseudoClass):GeneratedFile
 		{
-			var pTemplate:String=templateMgr.voTemplateStr;
+			var pTemplate:String=templateMgr.interfaceTemplateStr;
 			var className:String=pOriginalFile.className;
 			//包
 			var str:String=replacePackageNames(pTemplate);
 
 			//imports
-			str=str.replace(/\*IMPORTS\*/, pOriginalFile.imports);
+			//导入语句 
+			var dic:Dictionary=pOriginalFile.imports;
+			var imports:String="";
+			if (dic)
+			{
+				for (var key:String in dic)
+				{
+					imports+="\timport " + key + ";\n";
+				}
+			}
+			str=str.replace(/\*IMPORTS\*/, imports);
 			//class, constructor
 			str=str.replace(/\*INTERFACE\*/g, className);
 
@@ -48,18 +60,18 @@ package com.far.generator
 							{
 								functions+=",";
 							}
-							
+
 						}
 					}
-					functions+="):" + method.returnType + "{\n";
-					functions+="\t\t\t return null;\n";
-					functions+="\t\t}\n\n";
-					
+					functions+="):" + method.returnType + "\n";
 				}
 				str=str.replace(/\*FUNCTIONS\*/, functions);
 
 
-
+			}
+			var asFile:GeneratedFile=new GeneratedFile(className, "as", packageConfig.interfacePackageName);
+			asFile.code=str;
+			return asFile;
 		}
 	}
 }

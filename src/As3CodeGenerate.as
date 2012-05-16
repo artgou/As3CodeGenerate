@@ -5,9 +5,11 @@ package
 	import com.far.analysis.PseudoClassMethod;
 	import com.far.analysis.PseudoFunctionVariable;
 	import com.far.analysis.PseudoVariable;
+	import com.far.analysis.SyntaxHighlighterConfig;
 	import com.far.analysis.TemplateManager;
 	import com.far.generator.ClassGenerator;
 	import com.far.generator.EventGenerator;
+	import com.far.generator.InterfaceGenerator;
 	import com.far.generator.SingletonGenerator;
 	
 	import flash.display.Sprite;
@@ -42,8 +44,11 @@ package
 			pseudo.methods=Vector.<PseudoClassMethod>([new PseudoClassMethod("sayHi",Vector.<PseudoFunctionVariable>([new PseudoFunctionVariable("id","String","1"),new PseudoFunctionVariable("isA","Boolean","true")]),"Object")]);
 			var gen:ClassGenerator = new ClassGenerator();
 			var gfile:GeneratedFile = gen.generator(pseudo);
-			trace(gfile.code);
+//			trace(gfile.code);
 			
+			var intgen:InterfaceGenerator = new InterfaceGenerator();
+			gfile = intgen.generator(pseudo);
+			trace(gfile.code);
 //			var eveGen:EventGenerator = new EventGenerator();
 //			gfile = eveGen.generator("MyEvent");
 //			trace(gfile.code);
