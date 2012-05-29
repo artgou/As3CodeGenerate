@@ -2,10 +2,14 @@ package com.far.generator
 {
 	
 	import com.far.analysis.GeneratedFile;
+	import com.far.analysis.PseudoClass;
+	import com.far.analysis.TemplateManager;
 	import com.far.utils.StringTools;
 
-	public class EventGenerator extends GeneratorConfig 
+	public class EventGenerator   implements IGenerator
 	{
+		[Inject]
+		public var templateMgr:TemplateManager ;
 		public function EventGenerator()
 		{
 			super();
@@ -19,19 +23,20 @@ package com.far.generator
 		 * @return 
 		 * eveGen.generator("MyEvent","flash.events.XEvent","flash.display.MovieClip");
 		 */		
-		public function generator( pClassName:String, pQualifiedSuperClass:String=null, pPublicProperty:String=null):GeneratedFile
+		public function generator(pOriginalFile:PseudoClass):GeneratedFile
 		{
 			var pTemplate:String = templateMgr.eventTemplateStr;
 			
-			var str:String = replacePackageNames(pTemplate);
-			var lcClassName:String = StringTools.lowerFirstChar(pClassName);
-			pQualifiedSuperClass=pQualifiedSuperClass||= "flash.events.Event";
+			var str:String = pTemplate.replace(/\*EVENTSPACKAGE\*/g, pOriginalFile.packageName);
+//			var lcClassName:String = StringTools.lowerFirstChar(pClassName);
+			var pQualifiedSuperClass:String=pOriginalFile.pQualifiedSuperClass;
+			var pPublicProperty:String = pOriginalFile.pPublicProperty;
 			var superClass:String = pQualifiedSuperClass.substr(pQualifiedSuperClass.lastIndexOf(".")+1);
-			var defaultType:String = "public static const EVENT_"+pClassName.toUpperCase()+':String = "'+lcClassName+'";'
+//			var defaultType:String = "public static const EVENT_"+pClassName.toUpperCase()+':String = "'+lcClassName+'";'
 			
-			str = str.replace(/\*CLASS_NAME\*/g, pClassName);			
+//			str = str.replace(/\*CLASS_NAME\*/g, pClassName);			
 			str = str.replace(/\*EVENT_SUPERCLASS\*/g, superClass);			
-			str = str.replace(/\*EVENT_TYPES\*/g, "\t\t"+defaultType);
+//			str = str.replace(/\*EVENT_TYPES\*/g, "\t\t"+defaultType);
 			
 			var imports:String ;
 			imports= "\timport "+pQualifiedSuperClass+";\n";
@@ -55,9 +60,7 @@ package com.far.generator
 			}
 			
 			str = str.replace(/\*IMPORTS\*/g, imports);			
-			
-			
-			var asFile:GeneratedFile = new GeneratedFile(pClassName+"Event","as", packageConfig.eventsPackageName);
+			var asFile:GeneratedFile = new GeneratedFile(pOriginalFile.classNames,"as", pOriginalFile.packageName);
 			asFile.code = str ;
 			
 			

@@ -1,9 +1,10 @@
 package com.far.generator
 {
 	import com.far.analysis.GeneratedFile;
+	import com.far.analysis.PseudoClass;
 
 	public interface IGenerator
 	{
-		function generator():GeneratedFile;
+		function generator(pOriginalFile:PseudoClass):GeneratedFile;
 	}
 }

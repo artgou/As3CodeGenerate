@@ -1,63 +1,34 @@
 package
 {
-	import com.far.analysis.GeneratedFile;
-	import com.far.analysis.PseudoClass;
-	import com.far.analysis.PseudoClassMethod;
-	import com.far.analysis.PseudoFunctionVariable;
-	import com.far.analysis.PseudoVariable;
-	import com.far.analysis.SyntaxHighlighterConfig;
-	import com.far.analysis.TemplateManager;
-	import com.far.generator.ClassGenerator;
-	import com.far.generator.EventGenerator;
-	import com.far.generator.InterfaceGenerator;
-	import com.far.generator.SingletonGenerator;
+	import com.bit101.components.Component;
+	import com.bit101.components.Style;
+	import com.far.mvc.As3CodeGenerateSignalContext;
 	
-	import flash.display.Sprite;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
-	import flash.html.HTMLLoader;
-	import flash.utils.Dictionary;
+	import flash.events.Event;
+	
+	import org.osflash.signals.natives.base.SignalSprite;
+	import org.robotlegs.mvcs.SignalContext;
 
-	public class As3CodeGenerate extends Sprite
+	[SWF(frameRate="30", width="1024", height="600")]
+	public class As3CodeGenerate extends SignalSprite
 	{
-		public var fileCode:String="package" + "{" + "import flash.display.Sprite;" + "public class farutils extends Sprite" + "{" + "public function farutils()" + "	{" + "		} " + "}" + "}";
+		private var _codeSignal:SignalContext;
+
 		public function As3CodeGenerate()
 		{
-			var htmllod:HTMLLoader=new HTMLLoader();
-			htmllod.width=2000;
-			htmllod.height=400;
-			htmllod.placeLoadStringContentInApplicationSandbox=true;
-			var str:String=SyntaxHighlighterConfig.syntaxHBegin + fileCode + SyntaxHighlighterConfig.syntaxHEnd;
-			htmllod.loadString(str);
-			addChild(htmllod);
-			
-			
-			TemplateManager.getInstance().call= call;
-			TemplateManager.getInstance().getTemplates("FCGTemplates_v097000/");
+			this.signals.addedToStage.addOnce(start);
 		}
-		private  function call():void{
-			var pseudo:PseudoClass = new PseudoClass();
-			pseudo.className="Main";
-			pseudo.packageName="com";
-			pseudo.properties= Vector.<PseudoVariable>([new PseudoVariable("id","com.far.x",true),new PseudoVariable("name","com.far.y",true)]);
-			pseudo.methods=Vector.<PseudoClassMethod>([new PseudoClassMethod("sayHi",Vector.<PseudoFunctionVariable>([new PseudoFunctionVariable("id","String","1"),new PseudoFunctionVariable("isA","Boolean","true")]),"Object")]);
-			var gen:ClassGenerator = new ClassGenerator();
-			var gfile:GeneratedFile = gen.generator(pseudo);
-//			trace(gfile.code);
-			
-			var intgen:InterfaceGenerator = new InterfaceGenerator();
-			gfile = intgen.generator(pseudo);
-			trace(gfile.code);
-//			var eveGen:EventGenerator = new EventGenerator();
-//			gfile = eveGen.generator("MyEvent");
-//			trace(gfile.code);
-//			
-//			var sig:SingletonGenerator = new SingletonGenerator();
-//			gfile = sig.generator("MySig");
-//			trace(gfile.code);
+
+		private function start(event:Event):void
+		{
+			Component.initStage(stage);
+			Style.embedFonts=false;
+			Style.fontName="宋体";
+			Style.fontSize=12;
+			_codeSignal=new As3CodeGenerateSignalContext(this);
 		}
-		
-		
+
+
+
 	}
 }

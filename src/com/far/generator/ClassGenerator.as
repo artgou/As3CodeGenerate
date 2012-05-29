@@ -2,17 +2,18 @@ package com.far.generator
 {
 
 	import com.far.analysis.GeneratedFile;
-	import com.far.analysis.PackageConfig;
 	import com.far.analysis.PseudoClass;
 	import com.far.analysis.PseudoClassMethod;
 	import com.far.analysis.PseudoFunctionVariable;
 	import com.far.analysis.PseudoVariable;
 	import com.far.analysis.TemplateManager;
-
+	
 	import flash.utils.Dictionary;
 
-	public class ClassGenerator extends GeneratorConfig
+	public class ClassGenerator   implements IGenerator
 	{
+		[Inject]
+		public var templateMgr:TemplateManager ;
 		public function ClassGenerator()
 		{
 			super();
@@ -28,8 +29,8 @@ package com.far.generator
 		{
 
 			var pTemplate:String=templateMgr.voTemplateStr;
-			var className:String=pOriginalFile.className;
-			var str:String=replacePackageNames(pTemplate);
+			var classNames:Array=pOriginalFile.classNames;
+			var str:String=pTemplate.replace(/\*VOPACKAGE\*/g, pOriginalFile.packageName);
 
 			//导入语句 
 			var dic:Dictionary=pOriginalFile.imports;
@@ -43,7 +44,7 @@ package com.far.generator
 			}
 			str=str.replace(/\*IMPORTS\*/, imports);
 			//类 名 和构造器
-			str=str.replace(/\*VO\*/g, className);
+//			str=str.replace(/\*VO\*/g, className);
 			//属性，get set
 			var s:String="";
 			var getsets:String="";
@@ -101,7 +102,7 @@ package com.far.generator
 
 			}
 
-			var asFile:GeneratedFile=new GeneratedFile(className, "as", packageConfig.voPackageName);
+			var asFile:GeneratedFile=new GeneratedFile(classNames, "as", pOriginalFile.packageName);
 			asFile.code=str;
 
 			return asFile;

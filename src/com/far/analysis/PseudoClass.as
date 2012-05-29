@@ -1,5 +1,7 @@
 package com.far.analysis
 {
+	import com.far.mvc.models.ProjectValueActor;
+
 	import flash.utils.Dictionary;
 
 	/**
@@ -12,12 +14,15 @@ package com.far.analysis
 
 	public class PseudoClass
 	{
-
+		public var pQualifiedSuperClass:String="flash.events.Event"; //父类
 		public var packageName:String=""; //包名
-		public var className:String; //类名
+		public var classNames:Array; //类名集合
 		private var _properties:Vector.<PseudoVariable>=new Vector.<PseudoVariable>(); //要定义 的属性
 		private var _methods:Vector.<PseudoClassMethod>=new Vector.<PseudoClassMethod>(); //要定义的方法
 		private var _imports:Dictionary=new Dictionary(true); //要导入的类
+
+
+		public var pPublicProperty:String=""; //事件类用到的传输的数据类型
 
 		public function get imports():Dictionary
 		{
@@ -48,7 +53,7 @@ package com.far.analysis
 				{
 					for each (var psmeVe:PseudoFunctionVariable in psmeVes)
 					{
-						if (!TypeConfig.hasType(psmeVe.type))
+						if (!projectActor.hasType(psmeVe.type))
 						{
 							imports[psmeVe.type]=true;
 						}
@@ -61,13 +66,16 @@ package com.far.analysis
 
 				}
 				var returnType:String=psMe.returnType;
-				if(returnType){
-					if (!TypeConfig.hasType(returnType))
+				if (returnType)
+				{
+					if (!projectActor.hasType(returnType))
 					{
 						imports[psMe.returnType]=true;
 					}
-					psMe.returnType =psMe.returnType.substr(psMe.returnType.lastIndexOf(".") + 1);
-				}else{
+					psMe.returnType=psMe.returnType.substr(psMe.returnType.lastIndexOf(".") + 1);
+				}
+				else
+				{
 					psMe.returnType="void";
 				}
 			}
@@ -83,7 +91,7 @@ package com.far.analysis
 		{
 			for each (var ps:PseudoVariable in value)
 			{
-				if (!TypeConfig.hasType(ps.type))
+				if (!projectActor.hasType(ps.type))
 				{
 					imports[ps.type]=true;
 				}
@@ -91,7 +99,8 @@ package com.far.analysis
 			}
 			_properties=value;
 		}
-
+		[Inject]
+		public var projectActor:ProjectValueActor;
 
 	}
 }

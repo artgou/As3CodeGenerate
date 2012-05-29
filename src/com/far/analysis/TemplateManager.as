@@ -7,62 +7,54 @@ package  com.far.analysis
 	
 	/**
 	 * 
-	 * @author davidderaedt
+	 * @author far
 	 * 
-	 * Singleton used to access template files data
+	 * 模板管理器
 	 * 
 	 */	
 	
 	public class TemplateManager
 	{		
-		public var eventTemplateStr:String;				
-		public var voTemplateStr:String;
-		public var singletonTemplateStr:String;
-		public var interfaceTemplateStr:String;
+		public var eventTemplateStr:String;				//事件模板
+		public var voTemplateStr:String;    //对象模板
+		public var singletonTemplateStr:String;//单例模板
+		public var interfaceTemplateStr:String;//接口模板
 		
 
-		private static var instance:TemplateManager;
 		
-		public static function getInstance():TemplateManager
-		{
-			if(instance==null) instance = new TemplateManager();
-			return instance;
-		}
-		
-		
-		
+		[Inject]
+		public var autoCodeManager:AutoCodeManager; //自动代码提示
 		public function getTemplates(pDirPath:String):void
 		{
 			eventTemplateStr = getTemplateString(pDirPath, "Event.txt");
 			voTemplateStr = getTemplateString(pDirPath, "VO.txt");
 			singletonTemplateStr = getTemplateString(pDirPath, "Singleton.txt");
 			interfaceTemplateStr = getTemplateString(pDirPath, "Interface.txt");
-			call();
+			autoCodeManager.init(pDirPath);
+
 		}
 		
-		public var call:Function;
-		public static function getFileString(file:File, pEncoding:String="utf-8"):String
-		{
-			var stream:FileStream = new FileStream();
-			stream.open(file, FileMode.READ);
-			var str:String = stream.readMultiByte(stream.bytesAvailable, pEncoding);
-			stream.close();
-			return str;
-		}	
+		/**
+		 *读取文件 
+		 * @param pDirPath  路径
+		 * @param pFileName 文件名
+		 * @return 
+		 * 
+		 */		
 		public function getTemplateString(pDirPath:String, pFileName:String):String
 		{
-			return getFileString(getTemplate(pDirPath+pFileName));	
-		}
-		private function getTemplate(pPath:String):File
-		{
-			var f:File = File.applicationDirectory.resolvePath(pPath);
-			if(!f.exists) { 
-				trace("Unable to find template "+f.nativePath, "ERROR");
-				return new File();
+			var file:File = File.applicationDirectory.resolvePath(pDirPath+pFileName);
+			if(!file.exists) { 
+				trace("Unable to find template "+file.nativePath, "ERROR");
+				file= new File();
 			}
-			
-			return f;
+			var stream:FileStream = new FileStream();
+			stream.open(file, FileMode.READ);
+			var str:String = stream.readMultiByte(stream.bytesAvailable, "utf-8");
+			stream.close();
+			return str;
 		}
+	
 				
 	}
 }

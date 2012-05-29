@@ -13,21 +13,18 @@ package  com.far.analysis
 	public class GeneratedFile
 	{
 		
-		public var name:String; //文件名
+		public var names:Array; //文件名
 		public var code:String; //生成的代码
 		public var extension:String;//后缀
-		public var destination:String;		
+		public var destination:String;		//包
 		
-		public function GeneratedFile(pName:String, pExt:String, pDest:String)
+		public function GeneratedFile(pName:Array, pExt:String, pDest:String)
 		{
-			name = pName;
+			names = pName;
 			extension = pExt;
 			destination = pDest ;			
 		}
 		
-		public function get nameWithExt():String
-		{
-			return name+"."+extension;
-		}
+	 
 	}
 }

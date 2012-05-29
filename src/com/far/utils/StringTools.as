@@ -62,7 +62,13 @@ package  com.far.utils {
 			
 			return c.toUpperCase()+pString.substr(1);
           }          
-
+		  /**
+		   *	以什么开头
+		   */
+		  public static function startWith(input:String, prefix:String):Boolean
+		  {
+			  return (prefix == input.substring(0, prefix.length));
+		  }
 		
 	}
 }
