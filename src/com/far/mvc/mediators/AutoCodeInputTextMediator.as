@@ -7,17 +7,15 @@ package com.far.mvc.mediators
 	 * 创建时间：2012-5-21 上午7:22:33
 	 *
 	 */
-	import com.bit101.components.InputText;
-	import com.far.analysis.TemplateManager;
 	import com.far.mvc.mediators.views.common.AutoCodeInputText;
-	import com.far.utils.StringTools;
+	import com.far.mvc.signals.ClickInputSignal;
+	import com.far.mvc.signals.EnterAutoKeySignal;
+	import com.far.mvc.signals.FocusInputSignal;
+	import com.far.mvc.signals.SelectAutoCodeListItemSignal;
 	
-	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
-	import flash.text.ReturnKeyLabel;
-	import flash.utils.Dictionary;
-	
-	import mx.utils.StringUtil;
+	import flash.events.MouseEvent;
 	
 	import org.robotlegs.mvcs.Mediator;
 
@@ -26,8 +24,13 @@ package com.far.mvc.mediators
 		[Inject]
 		public var autoCodeInput:AutoCodeInputText;
 		[Inject]
-		public var template:TemplateManager;
-		
+		public var selectautoList:SelectAutoCodeListItemSignal;
+		[Inject]
+		public var enterkey:EnterAutoKeySignal;
+		[Inject]
+		public var clickInput:ClickInputSignal;
+		[Inject]
+		public var focusInput:FocusInputSignal;
 
 		public function AutoCodeInputTextMediator()
 		{
@@ -36,74 +39,41 @@ package com.far.mvc.mediators
 		override public function onRegister():void
 		{
 			autoCodeInput.inputText.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
-			autoCodeInput.list.addEventListener(Event.SELECT, seleListHandler);
+			autoCodeInput.inputText.addEventListener(MouseEvent.CLICK,clickInputText);
+			autoCodeInput.inputText.addEventListener(FocusEvent.FOCUS_OUT,FocusHandler);
+			selectautoList.add(selectItem);
 		}
-
-		protected function seleListHandler(event:Event):void
+		
+		protected function FocusHandler(event:FocusEvent):void
 		{
-			var obj:Object =autoCodeInput.list.selectedItem;
-			autoCodeInput.inputText.text =obj.label;
-			autoCodeInput.packageName=obj.data=="顶级"?"":obj.data;
-			setListItems(false);
+			focusInput.dispatch();
+		}
+		
+		protected function clickInputText(event:MouseEvent):void
+		{
+			clickInput.dispatch(event);
+		}
+		
+		private function selectItem(item:Object):void
+		{
+			autoCodeInput.inputText.text=item.label;
+			autoCodeInput.packageName=item.data == "顶级" ? "" : item.data;
 		}
 
 		protected function keyUpHandler(event:KeyboardEvent):void
 		{
 			event.stopImmediatePropagation();
-			var text:String=(event.currentTarget as InputText).text;
-			if (!text || text == "")
-			{
-				setListItems(false);
-				return;
-			}
-			//过滤 类的核心代码
-			var firstCode:String=text.charAt(0).toUpperCase();
-			text= StringTools.upperFirstChar(text);
-			var dic:Dictionary=template.autoCodeManager;
-			var listItems:Array=[];
-			if (dic && dic[firstCode])
-			{
-				var words:Dictionary=dic[firstCode];
-				if (words)
-				{
-					for  (var classes:String in words)
-					{
-						if (StringTools.startWith(classes, text))
-						{
-							var arr:Array=words[classes];
-							for (var i:int=0; i < arr.length; i++)
-							{
-								listItems.push({label:classes + "[" + arr[i] + "]",data:arr[i]});
-							}
-						}
-					}
-					if (listItems.length == 0)
-					{
-						setListItems(false);
-						return;
-					}
-
-				}
-				else
-				{
-					setListItems(false);
-					return;
-				}
-			}
-			setListItems(true, listItems);
+			enterkey.dispatch(event);
 		}
 
-		private function setListItems(show:Boolean, items:Array=null):void
-		{
-			autoCodeInput.list.items=items||[];
-			autoCodeInput.list.visible=show;
-//			autoCodeInput.inputText.text="";
-		}
+
 
 		override public function onRemove():void
 		{
 			autoCodeInput.inputText.removeEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
-			autoCodeInput.list.removeEventListener(Event.SELECT, seleListHandler);
+			autoCodeInput.inputText.removeEventListener(MouseEvent.CLICK,clickInputText);
+			autoCodeInput.inputText.removeEventListener(FocusEvent.FOCUS_OUT,FocusHandler);
+			selectautoList.remove(selectItem);
 		}
 
 

@@ -33,7 +33,6 @@ package com.far.mvc.mediators.views.common
 			this.x=(mystage.stageWidth - this.width) / 2;
 			this.y=(mystage.stageHeight - this.height) / 2;
 			this._closeButton.addEventListener(MouseEvent.CLICK, closeClickHandler);
-		
 		}
 
 		protected function closeClickHandler(event:MouseEvent):void

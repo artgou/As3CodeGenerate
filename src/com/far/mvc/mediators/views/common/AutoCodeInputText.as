@@ -18,14 +18,9 @@ package com.far.mvc.mediators.views.common
 	{
 		public var inputText:InputText;
 		public var packageName:String;
-		private var vbox:VBox;
-		public var list:List;
 		public function AutoCodeInputText()
 		{
-			vbox = new VBox(this);
-			inputText = new InputText(vbox);
-			list = new List(vbox);
-			list.visible = false;
+			inputText = new InputText(this);
 		}
 		public function getClassType():String{
 		   return packageName+inputText.text;

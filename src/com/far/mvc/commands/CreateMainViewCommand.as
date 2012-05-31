@@ -11,6 +11,7 @@ package com.far.mvc.commands
 	import com.far.mvc.mediators.views.CreateProjectView;
 	import com.far.mvc.mediators.views.MainBoxView;
 	import com.far.mvc.mediators.views.PackageListView;
+	import com.far.mvc.mediators.views.common.AutoCodeList;
 	
 	import org.robotlegs.mvcs.SignalCommand;
 	
@@ -22,6 +23,8 @@ package com.far.mvc.commands
 		public var createProjectview:CreateProjectView;
 		[Inject]
 		public var packagelist:PackageListView;
+		[Inject]
+		public var autoCodeList:AutoCodeList;
 	
 		
 		//mapSignal时将signal .dispatch的值传递的值临时映射。执行完execute方法后将映射解除
@@ -30,6 +33,8 @@ package com.far.mvc.commands
 		
 		override public function execute():void
 		{
+			autoCodeList.visible=false;
+			contextView.addChild(autoCodeList);
 			//先移除创建工程对话框
 			if(createProjectview.parent==contextView){
 				contextView.removeChild(createProjectview);

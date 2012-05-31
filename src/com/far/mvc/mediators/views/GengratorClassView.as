@@ -13,7 +13,6 @@ package com.far.mvc.mediators.views
 	import com.bit101.components.PushButton;
 	import com.bit101.components.ScrollPane;
 	import com.bit101.components.VBox;
-	import com.far.mvc.mediators.views.common.AutoCodeInputText;
 	import com.far.mvc.mediators.views.common.CenterWindow;
 	import com.far.mvc.mediators.views.common.PseudoVariableView;
 
@@ -43,13 +42,11 @@ package com.far.mvc.mediators.views
 			proVbox.spacing=0;
 			var autocoe:PseudoVariableView=new PseudoVariableView(); //PseudoVariableView 中的隐藏List占用了高度
 			proVbox.addChild(autocoe);
-			trace(autocoe.height);
-			var autocoe1:PseudoVariableView=new PseudoVariableView();
-			proVbox.addChild(new Label(null,0,0,"haha"));
+//			var autocoe1:PseudoVariableView=new PseudoVariableView();
+//			proVbox.addChild(autocoe1);
 			
 			funScor = new ScrollPane(conatiner);
-			
-			proVbox.width=proScor.width= funScor.width= this.width;
+			proVbox.width=proScor.width= funScor.width=400;
 			proScor.autoHideScrollBar=funScor.autoHideScrollBar=true;
 		}
 	}

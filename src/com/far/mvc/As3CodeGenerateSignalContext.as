@@ -20,6 +20,7 @@ package com.far.mvc
 	import com.far.mvc.commands.LoadTemplateCommand;
 	import com.far.mvc.commands.SelectPackageCommand;
 	import com.far.mvc.mediators.AutoCodeInputTextMediator;
+	import com.far.mvc.mediators.AutoCodeListMediator;
 	import com.far.mvc.mediators.CodePreviewViewMeidator;
 	import com.far.mvc.mediators.CreateProjectViewMediator;
 	import com.far.mvc.mediators.CreateTypeRaidoListViewMediator;
@@ -46,19 +47,24 @@ package com.far.mvc
 	import com.far.mvc.mediators.views.MainBoxView;
 	import com.far.mvc.mediators.views.PackageListView;
 	import com.far.mvc.mediators.views.common.AutoCodeInputText;
+	import com.far.mvc.mediators.views.common.AutoCodeList;
 	import com.far.mvc.models.ProjectValueActor;
 	import com.far.mvc.models.vo.GengertorManager;
 	import com.far.mvc.models.vo.GengertorViewManager;
 	import com.far.mvc.signals.ClickCreatButtonSignal;
+	import com.far.mvc.signals.ClickInputSignal;
 	import com.far.mvc.signals.CreateClassSignal;
 	import com.far.mvc.signals.CreateMainViewSignal;
+	import com.far.mvc.signals.EnterAutoKeySignal;
+	import com.far.mvc.signals.FocusInputSignal;
 	import com.far.mvc.signals.LoadTemplateCompleteSignal;
+	import com.far.mvc.signals.SelectAutoCodeListItemSignal;
 	import com.far.mvc.signals.SelectClassSignal;
 	import com.far.mvc.signals.SelectPackageSignal;
-
+	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
-
+	
 	import org.robotlegs.base.ContextEvent;
 	import org.robotlegs.mvcs.SignalContext;
 
@@ -80,6 +86,11 @@ package com.far.mvc
 			injector.mapSingleton(TemplateManager);
 			injector.mapSingleton(ProjectValueActor);
 			injector.mapSingleton(SelectClassSignal);
+			//选中代码
+			injector.mapSingleton(SelectAutoCodeListItemSignal);
+			injector.mapSingleton(EnterAutoKeySignal);
+			injector.mapSingleton(ClickInputSignal);
+			injector.mapSingleton(FocusInputSignal);
 
 			//代码模板管理
 			injector.mapSingleton(ClassGenerator);
@@ -95,6 +106,8 @@ package com.far.mvc
 			injector.mapSingleton(CreateTypeRaidoListView);
 			injector.mapSingleton(CodePreviewView);
 			injector.mapSingleton(MainBoxView);
+
+
 
 
 			//绑定  生成类视图窗口
@@ -133,8 +146,9 @@ package com.far.mvc
 			mediatorMap.mapView(GengratorSingtonView, GengratorSingtonViewMediator);
 			mediatorMap.mapView(GengratorMacroSingtonView, GengratorMacroSingtonViewMediator);
 
-
-          //启动
+			injector.mapSingleton(AutoCodeList);
+			mediatorMap.mapView(AutoCodeList,AutoCodeListMediator);
+			//启动
 			commandMap.mapEvent(ContextEvent.STARTUP_COMPLETE, LoadTemplateCommand);
 			super.startup();
 		}
